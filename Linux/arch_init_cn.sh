@@ -123,10 +123,27 @@ check_system_updates() {
 
 # 查看系统信息
 show_system_info() {
-    neofetch | tee temp_sysinfo.txt
-    dialog --textbox temp_sysinfo.txt 20 60
+    {
+        echo "操作系统信息："
+        hostnamectl
+        echo
+        echo "内存使用情况："
+        free -h
+        echo
+        echo "磁盘使用情况："
+        df -h --total
+        echo
+        echo "当前用户和登录会话："
+        who
+        echo
+        echo "内核日志（最近5条）："
+        journalctl -n 5 --no-pager
+    } >temp_sysinfo.txt
+
+    dialog --textbox temp_sysinfo.txt 20 80
     rm -f temp_sysinfo.txt
 }
+
 
 # 主循环
 while true; do
