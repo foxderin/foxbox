@@ -18,3 +18,8 @@
 
     适用于大陆Arch Linux用户的优化脚本，可以加速安装速度，并添加一些常用工具。
 
+#### Windows平台
+
+1. [PowerShell脚本执行限制策略切换](Windows/powershell_switch.bat)
+
+    PowerShell代码执行限制策略切换脚本，适用于Windows 10及以上版本。
