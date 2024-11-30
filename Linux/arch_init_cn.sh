@@ -14,10 +14,12 @@ fi
 
 # 选单函数
 menu() {
+    temp_file=$(mktemp /tmp/arch_linux_optimization_XXXXXX.txt)
+
     dialog --clear \
         --backtitle "Arch Linux 优化脚本" \
         --title "选择操作" \
-        --menu "请选择需要执行的操作：" 20 60 12 \
+        --menu "请选择需要执行的操作：" 20 60 13 \
         1 "配置 pacman 镜像源" \
         2 "启用 archlinuxcn 仓库" \
         3 "配置 Flatpak 镜像源" \
@@ -30,11 +32,10 @@ menu() {
         10 "检查系统更新" \
         11 "查看系统信息" \
         12 "退出" \
-        13 "安装 AUR 管理器 (yay)" \
-        2>temp_choice.txt
+        13 "安装 AUR 管理器 (yay)" 2>$temp_file
 
-    choice=$(<temp_choice.txt)
-    rm -f temp_choice.txt
+    choice=$(<"$temp_file")
+    rm -f "$temp_file"
     case $choice in
     1) configure_pacman_mirrors ;;
     2) enable_archlinuxcn ;;
@@ -92,40 +93,39 @@ optimize_yay() {
 
 # 安装常用工具
 install_common_tools() {
-    sudo pacman -S --noconfirm git wget curl vim htop
+    sudo pacman -S --noconfirm git wget curl vim
     dialog --msgbox "常用工具已安装完成！" 10 30
 }
 
 # 清理系统垃圾
 clean_system() {
-    sudo pacman -Sc --noconfirm
-    yay -Sc --noconfirm
-    sudo journalctl --vacuum-time=2weeks
-    dialog --msgbox "系统垃圾已清理完成！" 10 30
+    sudo pacman -Rns $(pacman -Qdtq) --noconfirm
+    sudo pacman -Scc --noconfirm
+    dialog --msgbox "系统垃圾已清理！" 10 30
 }
 
-# 安装开发环境
+# 安装开发环境 (Python, Node.js等)
 install_dev_env() {
-    sudo pacman -S --noconfirm python python-pip nodejs npm jdk-openjdk
-    dialog --msgbox "开发环境已安装完成！" 10 30
+    sudo pacman -S --noconfirm python python-pip nodejs npm
+    dialog --msgbox "开发环境已安装！" 10 30
 }
 
-# 配置性能优化
+# 配置性能优化 (Swap, I/O等)
 configure_performance() {
-    echo "vm.swappiness=10" | sudo tee /etc/sysctl.d/99-sysctl.conf
-    sudo systemctl enable fstrim.timer
-    sudo systemctl start fstrim.timer
-    dialog --msgbox "性能优化已配置！" 10 30
+    sudo systemctl enable --now zswap
+    dialog --msgbox "性能优化已启用！" 10 30
 }
 
 # 检查系统更新
 check_system_updates() {
     sudo pacman -Syu --noconfirm
-    dialog --msgbox "系统更新检查完成！" 10 30
+    dialog --msgbox "系统更新已完成！" 10 30
 }
 
 # 查看系统信息
 show_system_info() {
+    temp_file=$(mktemp /tmp/system_info_XXXXXX.txt)
+
     {
         echo "操作系统信息："
         hostnamectl
@@ -141,10 +141,10 @@ show_system_info() {
         echo
         echo "内核日志（最近5条）："
         journalctl -n 5 --no-pager
-    } >temp_sysinfo.txt
+    } > "$temp_file"
 
-    dialog --textbox temp_sysinfo.txt 20 80
-    rm -f temp_sysinfo.txt
+    dialog --textbox "$temp_file" 20 80
+    rm -f "$temp_file"
 }
 
 # 安装 AUR 管理器
@@ -162,7 +162,6 @@ install_aur_helper() {
         dialog --msgbox "yay 已成功安装！" 10 30
     fi
 }
-
 
 # 主循环
 while true; do
