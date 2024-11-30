@@ -89,7 +89,7 @@ optimize_yay() {
 
 # 安装常用工具
 install_common_tools() {
-    sudo pacman -S --noconfirm git wget curl vim neofetch htop
+    sudo pacman -S --noconfirm git wget curl vim htop
     dialog --msgbox "常用工具已安装完成！" 10 30
 }
 
