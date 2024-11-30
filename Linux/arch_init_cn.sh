@@ -29,7 +29,9 @@ menu() {
         9 "配置性能优化 (Swap, I/O等)" \
         10 "检查系统更新" \
         11 "查看系统信息" \
-        12 "退出" 2>temp_choice.txt
+        12 "退出" \
+        13 "安装 AUR 管理器 (yay)" \
+        2>temp_choice.txt
 
     choice=$(<temp_choice.txt)
     rm -f temp_choice.txt
@@ -46,6 +48,7 @@ menu() {
     10) check_system_updates ;;
     11) show_system_info ;;
     12) exit 0 ;;
+    13) install_aur_helper ;;
     *) dialog --msgbox "无效选项，请重试。" 10 30 ;;
     esac
 }
@@ -142,6 +145,22 @@ show_system_info() {
 
     dialog --textbox temp_sysinfo.txt 20 80
     rm -f temp_sysinfo.txt
+}
+
+# 安装 AUR 管理器
+install_aur_helper() {
+    if command -v yay &>/dev/null; then
+        dialog --msgbox "yay 已安装，无需重复安装。" 10 30
+    else
+        dialog --infobox "正在安装 AUR 管理器 yay..." 10 30
+        sudo pacman -S --needed --noconfirm base-devel git
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        cd /tmp/yay || { dialog --msgbox "克隆 yay 仓库失败！" 10 30; return; }
+        makepkg -si --noconfirm
+        cd - || return
+        rm -rf /tmp/yay
+        dialog --msgbox "yay 已成功安装！" 10 30
+    fi
 }
 
 
