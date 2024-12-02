@@ -81,15 +81,15 @@ configure_npm() {
     dialog --msgbox "NPM 镜像源已配置完成！" 10 30
 }
 
-# 优化 yay 镜像
-optimize_yay() {
-    if command -v yay &>/dev/null; then
-        yay --editrepo --save --aururl https://aur.tuna.tsinghua.edu.cn
-        dialog --msgbox "yay 镜像源已优化！" 10 30
-    else
-        dialog --msgbox "未检测到 yay，跳过操作。" 10 30
-    fi
-}
+# 优化 yay 镜像（弃用）
+# optimize_yay() {
+#     if command -v yay &>/dev/null; then
+#         yay --editrepo --save --aururl https://aur.tuna.tsinghua.edu.cn
+#         dialog --msgbox "yay 镜像源已优化！" 10 30
+#     else
+#         dialog --msgbox "未检测到 yay，跳过操作。" 10 30
+#     fi
+# }
 
 # 安装常用工具
 install_common_tools() {
