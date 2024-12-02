@@ -24,7 +24,7 @@ menu() {
         2 "启用 archlinuxcn 仓库" \
         3 "配置 Flatpak 镜像源" \
         4 "配置 NPM 镜像源" \
-        5 "优化 yay 镜像" \
+        # 5 "优化 yay 镜像" \
         6 "安装常用工具 (git, wget等)" \
         7 "清理系统垃圾" \
         8 "安装开发环境 (Python, Node.js等)" \
@@ -41,7 +41,7 @@ menu() {
     2) enable_archlinuxcn ;;
     3) configure_flatpak ;;
     4) configure_npm ;;
-    5) optimize_yay ;;
+    # 5) optimize_yay ;;
     6) install_common_tools ;;
     7) clean_system ;;
     8) install_dev_env ;;
